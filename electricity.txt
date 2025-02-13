@@ -1516,3 +1516,81 @@
 2025-02-13 03:07:02,808 -  * Debugger PIN: 111-111-137
 2025-02-13 03:07:10,407 - 127.0.0.1 - - [13/Feb/2025 03:07:10] "[33mGET / HTTP/1.1[0m" 404 -
 2025-02-13 03:07:10,671 - 127.0.0.1 - - [13/Feb/2025 03:07:10] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-02-13 03:47:26,462 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-13 03:47:26,462 - [33mPress CTRL+C to quit[0m
+2025-02-13 03:47:26,462 -  * Restarting with stat
+2025-02-13 03:47:26,624 -  * Debugger is active!
+2025-02-13 03:47:26,630 -  * Debugger PIN: 111-111-137
+2025-02-13 03:47:57,044 -  * Detected change in '/workspaces/puglover/register_test.py', reloading
+2025-02-13 03:47:57,078 -  * Restarting with stat
+2025-02-13 03:47:57,245 -  * Debugger is active!
+2025-02-13 03:47:57,245 -  * Debugger PIN: 111-111-137
+2025-02-13 03:48:02,484 -  * Detected change in '/workspaces/puglover/register_test.py', reloading
+2025-02-13 03:48:02,516 -  * Restarting with stat
+2025-02-13 03:48:02,684 -  * Debugger is active!
+2025-02-13 03:48:02,684 -  * Debugger PIN: 111-111-137
+2025-02-13 03:48:44,716 -  * Detected change in '/workspaces/puglover/register_test.py', reloading
+2025-02-13 03:48:44,748 -  * Restarting with stat
+2025-02-13 03:48:44,910 -  * Debugger is active!
+2025-02-13 03:48:44,911 -  * Debugger PIN: 111-111-137
+2025-02-13 03:48:59,017 -  * Detected change in '/workspaces/puglover/register_test.py', reloading
+2025-02-13 03:48:59,046 -  * Restarting with stat
+2025-02-13 03:48:59,236 -  * Debugger is active!
+2025-02-13 03:48:59,237 -  * Debugger PIN: 111-111-137
+2025-02-13 03:49:03,037 -  * Detected change in '/workspaces/puglover/register_test.py', reloading
+2025-02-13 03:49:03,069 -  * Restarting with stat
+2025-02-13 03:49:03,233 -  * Debugger is active!
+2025-02-13 03:49:03,233 -  * Debugger PIN: 111-111-137
+2025-02-13 03:49:07,013 -  * Detected change in '/workspaces/puglover/register_test.py', reloading
+2025-02-13 03:49:07,045 -  * Restarting with stat
+2025-02-13 03:49:07,227 -  * Debugger is active!
+2025-02-13 03:49:07,228 -  * Debugger PIN: 111-111-137
+2025-02-13 03:49:09,514 -  * Detected change in '/workspaces/puglover/register_test.py', reloading
+2025-02-13 03:49:09,546 -  * Restarting with stat
+2025-02-13 03:49:09,725 -  * Debugger is active!
+2025-02-13 03:49:09,726 -  * Debugger PIN: 111-111-137
+2025-02-13 03:49:20,767 -  * Detected change in '/workspaces/puglover/register_test.py', reloading
+2025-02-13 03:49:20,812 -  * Restarting with stat
+2025-02-13 03:49:21,004 -  * Debugger is active!
+2025-02-13 03:49:21,005 -  * Debugger PIN: 111-111-137
+2025-02-13 03:49:29,475 - 127.0.0.1 - - [13/Feb/2025 03:49:29] "[35m[1mPOST /register HTTP/1.1[0m" 201 -
+2025-02-13 03:50:22,521 -  * Detected change in '/workspaces/puglover/app.py', reloading
+2025-02-13 03:50:22,552 -  * Restarting with stat
+2025-02-13 03:50:22,715 -  * Debugger is active!
+2025-02-13 03:50:22,715 -  * Debugger PIN: 111-111-137
+2025-02-13 03:50:31,864 - 127.0.0.1 - - [13/Feb/2025 03:50:31] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+2025-02-13 03:51:52,901 -  * Detected change in '/workspaces/puglover/app.py', reloading
+2025-02-13 03:51:52,930 -  * Restarting with stat
+2025-02-13 03:52:21,058 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-13 03:52:21,059 - [33mPress CTRL+C to quit[0m
+2025-02-13 03:52:21,059 -  * Restarting with stat
+2025-02-13 03:52:21,232 -  * Debugger is active!
+2025-02-13 03:52:21,233 -  * Debugger PIN: 441-602-350
+2025-02-13 03:52:48,740 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-13 03:52:48,741 - [33mPress CTRL+C to quit[0m
+2025-02-13 03:52:48,741 -  * Restarting with stat
+2025-02-13 03:52:48,909 -  * Debugger is active!
+2025-02-13 03:52:48,909 -  * Debugger PIN: 441-602-350
+2025-02-13 03:53:05,688 - 127.0.0.1 - - [13/Feb/2025 03:53:05] "[35m[1mPOST /register HTTP/1.1[0m" 201 -
+2025-02-13 03:54:37,502 - 127.0.0.1 - - [13/Feb/2025 03:54:37] "[35m[1mPOST /register HTTP/1.1[0m" 201 -
+2025-02-13 03:56:35,394 -  * Detected change in '/workspaces/puglover/app.py', reloading
+2025-02-13 03:56:35,426 -  * Restarting with stat
+2025-02-13 03:56:47,150 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-13 03:56:47,150 - [33mPress CTRL+C to quit[0m
+2025-02-13 03:56:47,151 -  * Restarting with stat
+2025-02-13 03:56:47,337 -  * Debugger is active!
+2025-02-13 03:56:47,338 -  * Debugger PIN: 441-602-350
+2025-02-13 03:57:00,549 - 127.0.0.1 - - [13/Feb/2025 03:57:00] "[35m[1mPOST /register HTTP/1.1[0m" 201 -
+2025-02-13 03:57:35,417 - 127.0.0.1 - - [13/Feb/2025 03:57:35] "[35m[1mPOST /register HTTP/1.1[0m" 201 -
+2025-02-13 03:58:12,069 -  * Detected change in '/workspaces/puglover/register_test.py', reloading
+2025-02-13 03:58:12,102 -  * Restarting with stat
+2025-02-13 03:58:12,272 -  * Debugger is active!
+2025-02-13 03:58:12,272 -  * Debugger PIN: 441-602-350
+2025-02-13 03:58:15,951 -  * Detected change in '/workspaces/puglover/register_test.py', reloading
+2025-02-13 03:58:15,983 -  * Restarting with stat
+2025-02-13 03:58:16,152 -  * Debugger is active!
+2025-02-13 03:58:16,152 -  * Debugger PIN: 441-602-350

@@ -10,6 +10,7 @@ user_database_file='userdatabase.txt'
 
 logging.basicConfig(filename='electricity.txt', level=logging.INFO,
                     format='%(asctime)s - %(message)s')
+global user_database
 user_database=[]
 class User:
     def __init__(self,userID):
@@ -36,16 +37,8 @@ def register():
             if user.userID==userID:
                 user.add_device(device_id)
                 break
-    
-
-
-    
-
-
-    user_database.append(user_tem)
-    with open(user_database_file,'a') as userdatabase :
-        userdatabase.write(f"{username},{password},{device_id}\n")
-    print(user_database)
+    for i in user_database:
+        print(i)
     return  jsonify({"status": "success", "message": f"device id:{device_id} registered successfully."}),201
 
 @app.route('/meterreading', methods=['POST'])
@@ -61,7 +54,7 @@ def add():
 
     return {'message': 'Data received and logged successfully'}, 200
 
-def batchjob():
+
       
 @app.route('/stopServer',methods=['GET'])
 def stop_server():
