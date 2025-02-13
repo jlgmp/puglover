@@ -1,17 +1,18 @@
 from flask import Flask, jsonify, request
 import logging
 import os
-script_dir = os.path.dirname(os.path.abspath(__file__))
-os.chdir(script_dir)
+
+
 
 
 app = Flask(__name__)
-user_database_file='userdatabase.txt'
+global user_database
+user_database=[]
+
 
 logging.basicConfig(filename='electricity.txt', level=logging.INFO,
                     format='%(asctime)s - %(message)s')
-global user_database
-user_database=[]
+
 class User:
     def __init__(self,userID):
         self.userID=userID
@@ -25,16 +26,21 @@ class User:
 
 @app.route('/register',methods=['POST'])
 def register():
+    global user_database
     data = request.get_json()
     userID = data.get('userID')
     device_id=data.get('deviceID')
+    if not user_database:
+        user=User(userID)
+        user.add_device(device_id)
+        user_database.append(user)
     if not any(user.userID==userID for user in user_database):
         user=User(userID)
-        user_database.append(user)
         user.add_device(device_id)
+        user_database.append(user)
     else:
         for user in user_database:
-            if user.userID==userID:
+            if user.userID==userID and device_id not in user.get_device_id():
                 user.add_device(device_id)
                 break
     for i in user_database:
@@ -53,18 +59,32 @@ def add():
     logging.info(f'Received meter data: account{account}, meter: {meter}')
 
     return {'message': 'Data received and logged successfully'}, 200
+def userDataBackUp(user_database):
+    with open('userdatabase.txt', 'w', encoding='utf-8') as f:
+        for user in user_database:
+            userstr=user.userID+','+",".join(user.get_device_id())+'\n'
+            f.write(userstr)
+    print("Backup completed!") 
+    return
 
+  
+        
+def batchjob():
+    return
 
       
 @app.route('/stopServer',methods=['GET'])
 def stop_server():
     global acceptAPI
+    global user_database
     acceptAPI=False
+    userDataBackUp(user_database)
+    user_database=[]
     acceptAPI=True
     return "Server Shutting Down"
 
 
 if __name__ == '__main__':
     
-    app.run(debug=True)
+    app.run(debug=False)
     
