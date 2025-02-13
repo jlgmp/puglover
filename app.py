@@ -12,17 +12,36 @@ logging.basicConfig(filename='electricity.txt', level=logging.INFO,
                     format='%(asctime)s - %(message)s')
 user_database=[]
 class User:
-    def __init__(self,username,password,device_id):
-        self.username=username
-        self.password=password
-        self.device_id=device_id
+    def __init__(self,userID):
+        self.userID=userID
+        self.device_id_list=[]
+    def add_device(self,device_id):
+        self.device_id_list.append(device_id)
+    def get_device_id(self):
+        return self.device_id_list
+    def __str__(self):
+        return f"User:{self.userID} device_list:{self.device_id_list}"
+
 @app.route('/register',methods=['POST'])
 def register():
     data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-    device_id=data.get('id')
-    user_tem=User(username,password,device_id)
+    userID = data.get('userID')
+    device_id=data.get('deviceID')
+    if not any(user.userID==userID for user in user_database):
+        user=User(userID)
+        user_database.append(user)
+        user.add_device(device_id)
+    else:
+        for user in user_database:
+            if user.userID==userID:
+                user.add_device(device_id)
+                break
+    
+
+
+    
+
+
     user_database.append(user_tem)
     with open(user_database_file,'a') as userdatabase :
         userdatabase.write(f"{username},{password},{device_id}\n")
@@ -42,7 +61,8 @@ def add():
 
     return {'message': 'Data received and logged successfully'}, 200
 
-   
+def batchjob():
+      
 @app.route('/stopServer',methods=['GET'])
 def stop_server():
     global acceptAPI
