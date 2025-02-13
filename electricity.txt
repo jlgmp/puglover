@@ -1508,3 +1508,19 @@
 2025-02-08 16:52:32,824 -  * Restarting with watchdog (windowsapi)
 2025-02-08 16:52:33,315 -  * Debugger is active!
 2025-02-08 16:52:33,332 -  * Debugger PIN: 784-846-701
+2025-02-13 02:52:50,511 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-02-13 02:52:50,511 - [33mPress CTRL+C to quit[0m
+2025-02-13 02:53:14,243 - 127.0.0.1 - - [13/Feb/2025 02:53:14] "[35m[1mPOST /register HTTP/1.1[0m" 201 -
+2025-02-13 02:53:35,851 - Received meter data: accountctt, meter: 100
+2025-02-13 02:53:35,852 - 127.0.0.1 - - [13/Feb/2025 02:53:35] "POST /meterreading HTTP/1.1" 200 -
+2025-02-13 02:53:44,175 - 127.0.0.1 - - [13/Feb/2025 02:53:44] "GET /query?account=ctt HTTP/1.1" 200 -
+2025-02-13 02:54:05,573 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-02-13 02:54:05,573 - [33mPress CTRL+C to quit[0m
+2025-02-13 02:54:22,625 - 127.0.0.1 - - [13/Feb/2025 02:54:22] "[35m[1mPOST /register HTTP/1.1[0m" 201 -
+2025-02-13 02:54:33,282 - Received meter data: accountlxj, meter: 100
+2025-02-13 02:54:33,283 - 127.0.0.1 - - [13/Feb/2025 02:54:33] "POST /meterreading HTTP/1.1" 200 -
+2025-02-13 02:54:41,497 - Received meter data: accountlxj, meter: 1000
+2025-02-13 02:54:41,498 - 127.0.0.1 - - [13/Feb/2025 02:54:41] "POST /meterreading HTTP/1.1" 200 -
+2025-02-13 02:54:50,806 - 127.0.0.1 - - [13/Feb/2025 02:54:50] "GET /query?account=lxj HTTP/1.1" 200 -
