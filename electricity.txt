@@ -2222,3 +2222,11 @@
 2025-02-13 14:54:12,131 - 127.0.0.1 - - [13/Feb/2025 14:54:12] "[35m[1mPOST /register HTTP/1.1[0m" 201 -
 2025-02-13 14:54:26,785 - 127.0.0.1 - - [13/Feb/2025 14:54:26] "[35m[1mPOST /register HTTP/1.1[0m" 201 -
 2025-02-13 14:54:26,787 - 127.0.0.1 - - [13/Feb/2025 14:54:26] "GET /stopServer HTTP/1.1" 200 -
+2025-02-13 17:33:22,848 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-13 17:33:22,849 - [33mPress CTRL+C to quit[0m
+2025-02-13 17:33:50,160 - 127.0.0.1 - - [13/Feb/2025 17:33:50] "[35m[1mPOST /register HTTP/1.1[0m" 201 -
+2025-02-13 17:33:50,162 - 127.0.0.1 - - [13/Feb/2025 17:33:50] "GET /stopServer HTTP/1.1" 200 -
+2025-02-13 17:36:02,707 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-13 17:36:02,707 - [33mPress CTRL+C to quit[0m

@@ -2,16 +2,8 @@ from flask import Flask, jsonify, request
 import logging
 import os
 
-
-
-
-app = Flask(__name__)
 global user_database
 user_database=[]
-
-
-logging.basicConfig(filename='electricity.txt', level=logging.INFO,
-                    format='%(asctime)s - %(message)s')
 
 class User:
     def __init__(self,userID):
@@ -23,6 +15,40 @@ class User:
         return self.device_id_list
     def __str__(self):
         return f"User:{self.userID} device_list:{self.device_id_list}"
+
+
+
+def userDataRecover(user_database):
+    with open('userdatabase.txt', 'r', encoding='utf-8') as f: 
+        for line in f:
+            data=line.split(',')
+            user=User(data[0])
+            data.pop(0)
+            for i in data:
+                user.add_device(i)
+            user_database.append(user)
+
+
+userDataRecover(user_database)
+
+
+app = Flask(__name__)
+
+
+logging.basicConfig(filename='electricity.txt', level=logging.INFO,
+                    format='%(asctime)s - %(message)s')
+
+
+def userDataBackUp(user_database):
+    with open('userdatabase.txt', 'w', encoding='utf-8') as f:
+        for user in user_database:
+            userstr=user.userID+','+",".join(user.get_device_id())+'\n'
+            f.write(userstr)
+    print("Backup completed!") 
+
+
+
+
 
 @app.route('/register',methods=['POST'])
 def register():
@@ -59,18 +85,6 @@ def add():
     logging.info(f'Received meter data: account{account}, meter: {meter}')
 
     return {'message': 'Data received and logged successfully'}, 200
-def userDataBackUp(user_database):
-    with open('userdatabase.txt', 'w', encoding='utf-8') as f:
-        for user in user_database:
-            userstr=user.userID+','+",".join(user.get_device_id())+'\n'
-            f.write(userstr)
-    print("Backup completed!") 
-    return
-
-  
-        
-def batchjob():
-    return
 
       
 @app.route('/stopServer',methods=['GET'])
@@ -80,6 +94,8 @@ def stop_server():
     acceptAPI=False
     userDataBackUp(user_database)
     user_database=[]
+   
+
     acceptAPI=True
     return "Server Shutting Down"
 
