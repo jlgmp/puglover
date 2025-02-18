@@ -46,7 +46,7 @@ class Meter:
     def add_reading(self, date, time_slot, meter):
         if date not in self.readings:
             self.readings[date] = {}
-        self.readings[date][time_slot] = int(meter)  # 转成整数，避免字符串混乱
+        self.readings[date][time_slot] = int(meter)
 
     def get_readings(self):
         return self.readings
@@ -66,16 +66,16 @@ def meter_reading_endpoint():
     time_slot = req_data["time"]
     meter = req_data["meter"]
 
-    # 如果设备不存在，则创建一个新的设备对象
+    # if device not exists, create a new one
     if device not in data_store:
         data_store[device] = Meter(device)
 
-    # 记录电表读数
+    # record meter reading
     data_store[device].add_reading(date, time_slot, meter)
 
-    logging.info(f"记录设备 {device} 日期 {date} 时间 {time_slot} 的读数: {meter}")
+    logging.info(f"DeviceID {device} Date {date} Time {time_slot} Meter_Reading: {meter}")
 
-    # 返回所有设备的电表数据，去掉多余的包装
+    # return data of all devices and delete remaining items
     simplified_data = {dev: obj.get_readings() for dev, obj in data_store.items()}
 
     return jsonify(simplified_data), 200
@@ -142,4 +142,4 @@ def stop_server():
 
 if __name__ == '__main__':
     
-    app.run(debug=True, port=5001, use_reloader=False)
+    app.run(debug=False, port=5001, use_reloader=False)
