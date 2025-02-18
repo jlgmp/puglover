@@ -65,34 +65,23 @@ def meterDataBackup(meter_database):
             readings = meter.readings  # 设备的所有读数
             sorted_dates = sorted(readings.keys())  # 日期按升序排列
             
-            if not sorted_dates:
-                continue  # 该设备无数据，跳过
-            
-            # 处理 **第一天**
-            first_date = sorted_dates[0]  # 取出第一天的日期
-            if "00:00" in readings[first_date]:  # 确保第一天 00:00 数据存在
-                first_final_reading = readings[first_date]["00:00"]
-                first_daily_consumption = first_final_reading  # 假设前一天终值为 0
-                f.write(f"{meter.device_id}, {first_date}, {first_final_reading}, {first_daily_consumption}\n")
-            
-            # 处理 **后续天**
-            for i in range(1, len(sorted_dates)):  # 这里从 **1** 开始，跳过第一天，防止重复计算
-                current_date = sorted_dates[i - 1]
-                next_date = sorted_dates[i]
-                
-                current_day_readings = readings[current_date]
-                next_day_readings = readings[next_date]
-                
-                if "00:00" not in current_day_readings or "00:00" not in next_day_readings:
-                    continue  # 若缺少数据，则跳过
-                
-                previous_final = current_day_readings["00:00"]
-                today_final = next_day_readings["00:00"]
-                daily_consumption = today_final - previous_final
-                
-                # 记录 **current_date** 的数据
-                f.write(f"{meter.device_id}, {current_date}, {today_final}, {daily_consumption}\n")
+            if len(sorted_dates) < 2:
+                continue  # 如果设备数据少于 2 天，则无法计算用电量，跳过
 
+            # 遍历日期，计算每日最终读数 & 用电量
+            for i in range(len(sorted_dates) - 1):  # 只到倒数第二天
+                current_date = sorted_dates[i]
+                next_date = sorted_dates[i + 1]
+
+                # 确保当前天和第二天都有 "00:00" 读数
+                if "00:00" not in readings[current_date] or "00:00" not in readings[next_date]:
+                    continue
+                
+                final_reading = readings[next_date]["00:00"]  # 当天的最终读数是 **第二天的 00:00**
+                daily_consumption = final_reading - readings[current_date]["00:00"]  # 用电量
+                
+                f.write(f"{meter.device_id}, {current_date}, {final_reading}, {daily_consumption}\n")
+    
     print("Backup completed!")
 
 @app.route('/backup', methods=['GET', 'POST'])
