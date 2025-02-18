@@ -37,34 +37,48 @@ def register():
     return  jsonify({"status": "success", "message": f"device id:{device_id} registered successfully."}),201
 
 
-meter_database=[]
+data_store = {}
 class Meter:
-    def __init__(self,account,meter):
-        self.account=account
-        self.meter=meter
+    def __init__(self, device_id):
+        self.device_id = device_id
+        self.readings = {}
 
+    def add_reading(self, date, time_slot, meter):
+        if date not in self.readings:
+            self.readings[date] = {}
+        self.readings[date][time_slot] = int(meter)  # 转成整数，避免字符串混乱
+
+    def get_readings(self):
+        return self.readings
+
+    def __str__(self):
+        return f"Device: {self.device_id}, Readings: {self.readings}"
+    
 @app.route('/meterreading', methods=['POST'])
-def add():
-    
-    data = request.get_json()
-    account = data.get('account')
-    meter= data.get('meter')
-    
-    if account is None or meter is None:
-        return jsonify({"error": "Missing 'account' or 'meter' in request data"}), 400
-    logging.info(f'Received meter data: account{account}, meter: {meter}')
-    
-    meter_tem=Meter(account,meter)
-    meter_database.append(meter_tem)
-    
-    if not os.path.exists(meter_file):
-        open(meter_file, 'w').close()
-    
-    with open(meter_file,'a') as meterdatabase :
-        meterdatabase.write(f"{account},{meter}\n")
-    print(meter_database)
+def meter_reading_endpoint():
+    req_data = request.json
+    for field in ["device", "date", "time", "meter"]:
+        if field not in req_data:
+            return jsonify({"message": f"缺少字段: {field}"}), 400
 
-    return {'message': 'Data received and logged successfully'}, 200
+    device = req_data["device"]
+    date = req_data["date"]
+    time_slot = req_data["time"]
+    meter = req_data["meter"]
+
+    # 如果设备不存在，则创建一个新的设备对象
+    if device not in data_store:
+        data_store[device] = Meter(device)
+
+    # 记录电表读数
+    data_store[device].add_reading(date, time_slot, meter)
+
+    logging.info(f"记录设备 {device} 日期 {date} 时间 {time_slot} 的读数: {meter}")
+
+    # 返回所有设备的电表数据，去掉多余的包装
+    simplified_data = {dev: obj.get_readings() for dev, obj in data_store.items()}
+
+    return jsonify(simplified_data), 200
 
 
 @app.route('/query', methods=['GET'])
@@ -88,6 +102,33 @@ def query():
         return jsonify({"error": "Account not found"}), 404
 
     return jsonify({"account": account, "meter_readings": matching_records}), 200
+'''
+def query_data():
+    # 通过URL参数传递设备ID和日期，例如：/query?device=111-111-111&date=2024-01-01
+    device = request.args.get("device")
+    date = request.args.get("date")  # 可选参数
+
+    if not device:
+        return jsonify({"message": "请提供设备ID (device) 参数"}), 400
+
+    # 从内存数据结构中获取指定设备的数据
+    device_data = data_store.get(device)
+    if device_data is None:
+        return jsonify({"message": f"设备 {device} 没有记录"}), 404
+
+    if date:
+        # 如果提供了日期，则返回该日期的数据
+        date_data = device_data.get(date)
+        if date_data is None:
+            return jsonify({"message": f"设备 {device} 在日期 {date} 没有记录"}), 404
+        return jsonify({device: {date: date_data}})
+    else:
+        # 否则返回该设备所有的记录
+        return jsonify({device: device_data})
+
+'''
+
+
 
 
    
