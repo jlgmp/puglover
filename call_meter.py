@@ -23,7 +23,7 @@ def meter_reading():
                 'meter': meter
             }
 
-            response = requests.post('http://127.0.0.1:5001/meterreading', json=data)
+            response = requests.post('http://127.0.0.1:5001/meterin', json=data)
             result = response.json()
 
             print("Successfully recorded.")

@@ -18,7 +18,7 @@ class Meter:
     def __str__(self):
         return f"Device: {self.device_id}, Readings: {self.readings}"
 
-@app.route('/meterreading', methods=['POST'])
+@app.route('/meterin', methods=['POST'])
 def meter_reading_endpoint():
     global meter_database
     req_data = request.json
@@ -31,24 +31,32 @@ def meter_reading_endpoint():
     time_slot = req_data["time"]
     meter = req_data["meter"]
 
-    # 检查是否已有该设备
     existing_meter = next((m for m in meter_database if m.device_id == device), None)
 
     if existing_meter is None:
-        # 新建设备并添加数据
         new_meter = Meter(device)
         new_meter.add_reading(time_slot, meter)
         meter_database.append(new_meter)
     else:
-        # 设备已存在，直接更新数据
         existing_meter.add_reading(time_slot, meter)
 
-    # 打印当前数据库（调试用）
-    #for m in meter_database:
-    #    print(m)
-
-    # 返回所有设备的数据
     return jsonify({m.device_id: m.get_readings() for m in meter_database}), 200
+
+@app.route('/meterdata', methods=['GET'])
+def get_meter_data():
+    global meter_database
+    device_id = request.args.get("device")  # 从请求参数获取 device_id
+
+    if not device_id:
+        return jsonify({"message": "请提供 device 参数"}), 400
+
+    # 查找指定设备的 meter 数据
+    existing_meter = next((m for m in meter_database if m.device_id == device_id), None)
+
+    if existing_meter is None:
+        return jsonify({"message": f"设备 {device_id} 未找到"}), 404
+
+    return jsonify({device_id: existing_meter.get_readings()}), 200
 
 
 def meterDataBackup(meter_database):
@@ -56,13 +64,12 @@ def meterDataBackup(meter_database):
     df = pd.read_csv(file_name, sep=',', encoding='utf-8')
     df_sorted = df.sort_values('Date', ascending=True)
     last_readings = df_sorted.groupby('DeviceID').tail(1).set_index('DeviceID')['Final_Daily_Readings'].to_dict()
-    
-    # 处理新的数据
+
     new_data = []
     today = datetime.date.today().strftime('%Y-%m-%d')
     for meter in meter_database:
         device_id = meter.device_id
-        readings = meter.readings  # {时间: 读数}
+        readings = meter.readings
         final_reading_today = readings["24:00"]
 
         previous_final = last_readings.get(device_id, None)
@@ -81,7 +88,6 @@ def stopserver():
     global meter_database
     meterDataBackup(meter_database)
     return jsonify({"message": "数据备份完成！"}), 200 
-
 
 if __name__ == '__main__':
     app.run(debug=False, port=5001)
