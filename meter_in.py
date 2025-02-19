@@ -15,7 +15,6 @@ def generate_half_hour_times():
 
 if __name__ == "__main__":
     times = generate_half_hour_times()
-    date='2025-01-01'
     for i in range(1,3):
         device=f"{i}{i}{i}"+'-'+f"{i}{i}{i}"+'-'+f'{i}{i}{i}'
         meter=random.uniform(10.1,30.1)
@@ -26,7 +25,7 @@ if __name__ == "__main__":
             hour_con=round(hour_con,1)
             meter+=hour_con
 
-            data = {'device':f"{device}", 'date':f"{date}","time":f"{time}",'meter':f"{meter}"}
+            data = {'device':f"{device}", "time":f"{time}",'meter':f"{meter}"}
             response = requests.post('http://127.0.0.1:5000/meterreading', json=data)
 
                 
