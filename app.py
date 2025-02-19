@@ -108,6 +108,8 @@ def stop_server():
     acceptAPI=False
     userDataBackUp(user_database)
     user_database=[]
+    if not user_database:
+        userDataRecover(user_database)
 
     acceptAPI=True
     return "Server Shutting Down"
@@ -127,8 +129,8 @@ def stopserver():
 def userDataBackUp(user_database):
     with open('userdatabase.txt', 'w', encoding='utf-8') as f:
         for user in user_database:
-            userstr=user.userID+','+",".join(user.get_device_id())+'\n'
-            f.write(userstr)
+            userstr=user.userID+','+",".join(user.get_device_id())
+            f.write(userstr+'\n')
     print("Backup completed!") 
 
 # Meter Readings Backup
@@ -170,17 +172,18 @@ def meterDataBackup(meter_database):
 def userDataRecover(user_database):
     with open('userdatabase.txt', 'r', encoding='utf-8') as f: 
         for line in f:
+            line=line.strip()
             data=line.split(',')
             user=User(data[0])
             data.pop(0)
             for i in data:
                 user.add_device(i)
             user_database.append(user)
-def eleDataRecover(meter_database):
-    with open('electricity.txt','r',encoding='utf-8') as f:
-        
+'''def eleDataRecover(meter_database):
+    with open('meterDatabase.txt','r',encoding='utf-8') as f:
+        '''
 
-userDataRecover(user_database)
+
 
 
 # ----------------------------------- Run ---------------------------------------------

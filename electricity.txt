@@ -2236,3 +2236,65 @@
 2025-02-19 06:10:59,753 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5001
 2025-02-19 06:10:59,753 - [33mPress CTRL+C to quit[0m
+2025-02-19 08:31:49,235 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-19 08:31:49,236 - [33mPress CTRL+C to quit[0m
+2025-02-19 08:31:59,395 - 127.0.0.1 - - [19/Feb/2025 08:31:59] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:32:07,183 - 127.0.0.1 - - [19/Feb/2025 08:32:07] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:32:14,452 - 127.0.0.1 - - [19/Feb/2025 08:32:14] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:32:21,313 - 127.0.0.1 - - [19/Feb/2025 08:32:21] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:33:21,079 - 127.0.0.1 - - [19/Feb/2025 08:33:21] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:33:43,016 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-19 08:33:43,016 - [33mPress CTRL+C to quit[0m
+2025-02-19 08:33:51,276 - 127.0.0.1 - - [19/Feb/2025 08:33:51] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:34:42,364 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-19 08:34:42,365 - [33mPress CTRL+C to quit[0m
+2025-02-19 08:34:46,779 - 127.0.0.1 - - [19/Feb/2025 08:34:46] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:35:44,144 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-19 08:35:44,144 - [33mPress CTRL+C to quit[0m
+2025-02-19 08:35:48,646 - 127.0.0.1 - - [19/Feb/2025 08:35:48] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:36:27,971 - 127.0.0.1 - - [19/Feb/2025 08:36:27] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:36:38,127 - 127.0.0.1 - - [19/Feb/2025 08:36:38] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:36:43,930 - 127.0.0.1 - - [19/Feb/2025 08:36:43] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:36:54,237 - 127.0.0.1 - - [19/Feb/2025 08:36:54] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:38:43,740 - 127.0.0.1 - - [19/Feb/2025 08:38:43] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:39:13,157 - 127.0.0.1 - - [19/Feb/2025 08:39:13] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:40:03,473 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-19 08:40:03,473 - [33mPress CTRL+C to quit[0m
+2025-02-19 08:40:14,733 - 127.0.0.1 - - [19/Feb/2025 08:40:14] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:40:19,869 - 127.0.0.1 - - [19/Feb/2025 08:40:19] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:40:24,438 - 127.0.0.1 - - [19/Feb/2025 08:40:24] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:40:33,678 - 127.0.0.1 - - [19/Feb/2025 08:40:33] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:40:42,720 - 127.0.0.1 - - [19/Feb/2025 08:40:42] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:40:56,214 - 127.0.0.1 - - [19/Feb/2025 08:40:56] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:41:18,175 - 127.0.0.1 - - [19/Feb/2025 08:41:18] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:41:25,089 - 127.0.0.1 - - [19/Feb/2025 08:41:25] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:42:50,005 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-19 08:42:50,005 - [33mPress CTRL+C to quit[0m
+2025-02-19 08:43:00,435 - 127.0.0.1 - - [19/Feb/2025 08:43:00] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:43:10,856 - 127.0.0.1 - - [19/Feb/2025 08:43:10] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:43:23,421 - 127.0.0.1 - - [19/Feb/2025 08:43:23] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:43:29,215 - 127.0.0.1 - - [19/Feb/2025 08:43:29] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:43:36,615 - 127.0.0.1 - - [19/Feb/2025 08:43:36] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:43:48,426 - 127.0.0.1 - - [19/Feb/2025 08:43:48] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:43:57,307 - 127.0.0.1 - - [19/Feb/2025 08:43:57] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:44:13,532 - 127.0.0.1 - - [19/Feb/2025 08:44:13] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:44:13,534 - 127.0.0.1 - - [19/Feb/2025 08:44:13] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:45:50,053 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-02-19 08:45:50,054 - [33mPress CTRL+C to quit[0m
+2025-02-19 08:46:00,771 - 127.0.0.1 - - [19/Feb/2025 08:46:00] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:46:06,984 - 127.0.0.1 - - [19/Feb/2025 08:46:06] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:46:11,761 - 127.0.0.1 - - [19/Feb/2025 08:46:11] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:46:17,564 - 127.0.0.1 - - [19/Feb/2025 08:46:17] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:46:21,969 - 127.0.0.1 - - [19/Feb/2025 08:46:21] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:46:27,854 - 127.0.0.1 - - [19/Feb/2025 08:46:27] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:46:33,277 - 127.0.0.1 - - [19/Feb/2025 08:46:33] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:46:58,508 - 127.0.0.1 - - [19/Feb/2025 08:46:58] "POST /register HTTP/1.1" 200 -
+2025-02-19 08:46:58,511 - 127.0.0.1 - - [19/Feb/2025 08:46:58] "GET /stopServer HTTP/1.1" 200 -
+2025-02-19 08:47:10,163 - 127.0.0.1 - - [19/Feb/2025 08:47:10] "GET /stopServer HTTP/1.1" 200 -
