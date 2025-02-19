@@ -179,7 +179,7 @@ def userDataRecover(user_database):
 def eleDataRecover(meter_database):
     with open('electricity.txt','r',encoding='utf-8') as f:
         
-
+fffs
 userDataRecover(user_database)
 
 
