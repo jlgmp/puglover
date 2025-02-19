@@ -1,24 +1,20 @@
-/* General Body Styling */
 body {
-    font-family: 'Arial';
+    font-family: Arial;
+    text-align: center;
     margin: 0;
     padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
 }
 
-/* Container Style for Form */
 .container {
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
 }
 
-/* Input and Button Styling */
-input, button {
+
+input, button, select {
     width: 100%;
+    max-width: 300px;  
     padding: 10px;
     margin-top: 10px;
     border-radius: 4px;
@@ -26,18 +22,20 @@ input, button {
     font-size: 16px;
 }
 
-/* Submit Button Styling */
 input[type="submit"], button {
-    background-color: #007bff; /* Blue background */
+    background-color: #007bff; 
     color: white;
     border: none;
     cursor: pointer;
     font-size: 18px;
 }
 
-/* Button Hover Effect */
 button:hover, input[type="submit"]:hover {
-    background-color: #0056b3; /* Darker blue when hovered */
+    background-color: #0056b3; 
 }
 
-
+/* Electricity Usage */
+#electricity-graph {
+    width: 100% !important;
+    max-width: 100%;
+}

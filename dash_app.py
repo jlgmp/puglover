@@ -2,8 +2,12 @@ import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
 import re
+import datetime
+import pandas as pd
+import plotly.graph_objs as go
 # pip install dash flask
 
+user_device_id = None
 
 app = dash.Dash(__name__, prevent_initial_callbacks='initial_duplicate')
 # allows Dash to handle multiple callbacks which update the same Output('url', 'pathname')
@@ -65,8 +69,18 @@ meter_reading_page = html.Div([
 
 # function: electricity usage page content
 electricity_usage_page = html.Div([
-    html.H2("Electricity Usage"),
-    html.Div(id='electricity-usage-content')  
+    dcc.Dropdown(
+        id='time-range-dropdown',
+        options=[
+            {'label': 'Today', 'value': 'today'},
+            {'label': 'Last 7 Days', 'value': '7days'},
+            {'label': 'This Month', 'value': 'thismonth'},
+            {'label': 'Last Month', 'value': 'lastmonth'}
+        ],
+        value='today',  # Default value
+    ),
+    dcc.Graph(id='electricity-graph'),
+    html.Div(id='electricity-consumption'),
 ])
 
 
@@ -82,16 +96,19 @@ electricity_usage_page = html.Div([
     State('device-id', 'value')  
 )
 def login(n_clicks, device_id):
+    global user_device_id
+
     if n_clicks > 0 and device_id:  
-        with open('userdatabase.txt', 'r') as file:
+        with open('userDatabase.txt', 'r') as file:
             user_data = file.readlines()
 
-        # check if the device id in the userdatabse
+        # check if the device id in the userDatabse
         device_found = False
         for line in user_data:
-            user, stored_device_id = line.strip().split(',')
+            stored_device_id = line.strip()
             if stored_device_id == device_id:
                 device_found = True
+                user_device_id = device_id
                 break
 
         if device_found:
@@ -112,7 +129,7 @@ def go_to_register(n_clicks):
     return dash.no_update
 
 
-# register -> userdatabase button event
+# register in-page button event
 @app.callback(
     [Output('url', 'pathname', allow_duplicate=True),
      Output('register-info', 'children')],
@@ -127,8 +144,8 @@ def register(n_clicks, user_id, device_id):
             return dash.no_update, "Invalid device ID format (standard device ID example: 999-999-999)."
         else: 
             # write the new user info into database
-            with open('userdatabase.txt', 'a') as file:
-                file.write(f"{user_id},{device_id}\n")
+            with open('userDatabase.txt', 'a') as file:
+                file.write(f"{device_id}\n")
             return dash.no_update, "Register successfully."
     return dash.no_update, dash.no_update
 
@@ -158,6 +175,86 @@ def update_output(latest_clicks, usage_clicks):
     return dash.no_update
 
 
+# electricity usage in-page button event
+
+# Helper functions to filter data
+def filter_data(time_range, user_device_id):
+    df = pd.read_csv('meterDatabase.txt', delimiter=",") 
+    df['Date'] = pd.to_datetime(df['Date'])  
+    df = df[df['DeviceID'] == user_device_id]
+
+    now = datetime.datetime.now()
+    if time_range == 'today':
+        start_time = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_time = now
+        data = df[(df['Date'] >= start_time) & (df['Date'] <= end_time)]
+    elif time_range == '7days':
+        start_time = now - pd.Timedelta(days=7)
+        data = df[df['Date'] >= start_time]
+    elif time_range == 'thismonth':
+        start_time = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        data = df[(df['Date'] >= start_time) & (df['Date'].dt.month == now.month)]
+    elif time_range == 'lastmonth':
+        start_time = (now.replace(day=1) - pd.Timedelta(days=1)).replace(day=1)
+        end_time = start_time + pd.DateOffset(months=1) - pd.Timedelta(seconds=1)
+        data = df[(df['Date'] >= start_time) & (df['Date'] <= end_time)]      
+    return data
+
+
+@app.callback(
+    [Output('electricity-graph', 'figure'),
+     Output('electricity-consumption', 'children')],
+    [Input('time-range-dropdown', 'value')]
+)
+def update_graph(time_range):
+    now = datetime.datetime.now()  # Ensure 'now' is defined inside the callback
+    data = filter_data(time_range, user_device_id)
+    
+    # Calculate total consumption and average consumption
+    total_consumption = data['Daily_Consumption'].sum()
+    avg_consumption = data['Daily_Consumption'].mean()
+
+    # Create the figure
+    if time_range == 'today':
+        title = f'{now.strftime("%Y-%m-%d")} Electricity Consumption'
+        x = data['Date'].dt.hour + data['Date'].dt.minute / 60  # For hourly data on today
+    elif time_range == '7days':
+        title = 'Last 7 Days Electricity Consumption'
+        x = data['Date']
+    elif time_range == 'thismonth':
+        title = 'This Month\'s Electricity Consumption'
+        x = data['Date']
+    elif time_range == 'lastmonth':
+        title = 'Last Month\'s Electricity Consumption'
+        x = data['Date']
+    trace = go.Scatter(
+        x=x, 
+        y=data['Daily_Consumption'],
+        mode='lines+markers', 
+        name='Electricity Consumption',
+        hovertemplate='%{x}<br>%{y} kWh'
+        )
+    
+    avg_line = go.Scatter(
+        x=x, y=[avg_consumption] * len(x),
+        mode='lines', name='Average Consumption', line=dict(dash='dash')
+    )
+    
+    figure = {
+        'data': [trace, avg_line],
+        'layout': go.Layout(
+            title=title,
+            xaxis={'title': 'Time' if time_range == 'today' else 'Date'},
+            yaxis={'title': 'Electricity Consumption (kWh)'},
+        )
+    }
+
+    consumption_text = html.Div([
+            html.P(f'Total Consumption: {total_consumption:.2f} kWh', style={'font-size': '16px', 'font-weight': 'bold'}),
+            html.P(f'Average Consumption: {avg_consumption:.2f} kWh', style={'font-size': '16px', 'font-weight': 'bold'})
+        ])
+
+    return figure, consumption_text
 
 
 
@@ -182,8 +279,7 @@ def display_page(pathname):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
+    app.run(debug=True,port=8050)
 
 
 
