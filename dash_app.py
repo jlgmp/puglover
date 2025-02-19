@@ -2,12 +2,14 @@ import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
 import re
+import requests
 import datetime
 import pandas as pd
 import plotly.graph_objs as go
 # pip install dash flask
 
 user_device_id = None
+
 
 app = dash.Dash(__name__, prevent_initial_callbacks='initial_duplicate')
 # allows Dash to handle multiple callbacks which update the same Output('url', 'pathname')
@@ -62,9 +64,63 @@ function_page = html.Div([
 
 # function: meter reading page content
 meter_reading_page = html.Div([
-    html.H2("Meter Reading"),
-    html.Div(id='meter-reading-content')  
+    dcc.Graph(id='meter-graph'),
 ])
+
+
+@app.callback(
+    Output('meter-graph', 'figure'),
+    Input('url', 'pathname')
+)
+def update_graph(pathname):
+    if pathname!= '/function/meter-reading':
+        return dash.no_update
+
+    now = datetime.datetime.now()  # Ensure 'now' is defined inside the callback
+
+    # Fetch data from the API
+    url = f"http://127.0.0.1:5000/meterdata?device={user_device_id}"
+    response = requests.get(url)
+    if response.status_code!= 200:
+        return dash.no_update, "Failed to retrieve data from the API."
+
+    data_json = response.json().get(user_device_id, {})
+
+    sorted_times = sorted(data_json.keys())
+    end_time = sorted_times[-1]
+
+    start_time = '01:00'
+    x = []
+    y = []
+    for time, consumption in data_json.items():
+        if time >= start_time:
+            x.append(time)
+            y.append(consumption)
+    title = f'{now.strftime("%Y-%m-%d")} Meter reading from {start_time} to {end_time}'
+
+    # Create the figure
+    trace = go.Scatter(
+        x=x,
+        y=y,
+        mode='lines+markers',
+        name='Daily Meter Reading',
+        hovertemplate='%{x}<br>%{y} kWh'
+    )
+
+    figure = {
+        'data': [trace],
+        'layout': go.Layout(
+            title=title,
+            xaxis={'title': 'Time'},
+            yaxis={'title': 'Meter Reading (kWh)'},
+        )
+    }
+    return figure
+
+
+
+
+
 
 
 # function: electricity usage page content
@@ -72,12 +128,11 @@ electricity_usage_page = html.Div([
     dcc.Dropdown(
         id='time-range-dropdown',
         options=[
-            {'label': 'Today', 'value': 'today'},
             {'label': 'Last 7 Days', 'value': '7days'},
             {'label': 'This Month', 'value': 'thismonth'},
             {'label': 'Last Month', 'value': 'lastmonth'}
         ],
-        value='today',  # Default value
+        value='7days',  # Default value
     ),
     dcc.Graph(id='electricity-graph'),
     html.Div(id='electricity-consumption'),
@@ -184,11 +239,7 @@ def filter_data(time_range, user_device_id):
     df = df[df['DeviceID'] == user_device_id]
 
     now = datetime.datetime.now()
-    if time_range == 'today':
-        start_time = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_time = now
-        data = df[(df['Date'] >= start_time) & (df['Date'] <= end_time)]
-    elif time_range == '7days':
+    if time_range == '7days':
         start_time = now - pd.Timedelta(days=7)
         data = df[df['Date'] >= start_time]
     elif time_range == 'thismonth':
@@ -215,10 +266,7 @@ def update_graph(time_range):
     avg_consumption = data['Daily_Consumption'].mean()
 
     # Create the figure
-    if time_range == 'today':
-        title = f'{now.strftime("%Y-%m-%d")} Electricity Consumption'
-        x = data['Date'].dt.hour + data['Date'].dt.minute / 60  # For hourly data on today
-    elif time_range == '7days':
+    if time_range == '7days':
         title = 'Last 7 Days Electricity Consumption'
         x = data['Date']
     elif time_range == 'thismonth':
@@ -244,7 +292,7 @@ def update_graph(time_range):
         'data': [trace, avg_line],
         'layout': go.Layout(
             title=title,
-            xaxis={'title': 'Time' if time_range == 'today' else 'Date'},
+            xaxis={'title': 'Date'},
             yaxis={'title': 'Electricity Consumption (kWh)'},
         )
     }
