@@ -3,6 +3,7 @@ import pandas as pd
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
+acceptAPI=True
 
 global meter_database
 meter_database = []
@@ -62,7 +63,8 @@ def meterDataBackup(meter_database):
     for meter in meter_database:
         device_id = meter.device_id
         readings = meter.readings
-        final_reading_today = readings["24:00"]
+        # final_reading_today = readings["24:00"]
+        final_reading_today = readings[max(readings.keys())]
 
         previous_final = last_readings.get(device_id, None)
         daily_consumption = final_reading_today - previous_final
@@ -75,11 +77,14 @@ def meterDataBackup(meter_database):
     
     print("Backup completed!")
 
-@app.route('/backup', methods=['GET', 'POST'])
-def stopserver():
-    global meter_database
+
+@app.route('/stopServer',methods=['GET', 'POST'])
+def stop_server():
+    global acceptAPI, meter_database
+    acceptAPI=False
     meterDataBackup(meter_database)
-    return jsonify({"message": "Backup succesfully!"}), 200 
+    acceptAPI = True
+    return "Server Shutting Down"
 
 if __name__ == '__main__':
     app.run(debug=False, port=5001)
