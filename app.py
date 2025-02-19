@@ -11,7 +11,7 @@ logging.basicConfig(filename='electricity.txt', level=logging.INFO,
 
 acceptAPI=True
 # --------------------------------- Register ---------------------------------------------
-
+'''
 # Define Class User
 global user_database
 user_database=[]
@@ -47,10 +47,10 @@ def register():
             if user.userID==userID and device_id not in user.get_device_id():
                 user.add_device(device_id)
                 break
-    '''for i in user_database:
-        print(i)'''
+    for i in user_database:
+        print(i)
     return  jsonify({"status": "success", "message": f"device id:{device_id} registered successfully."})
-
+'''
 
 # ----------------------------------- Meter Reading ---------------------------------------------
 
