@@ -1,0 +1,43 @@
+/* General Body Styling */
+body {
+    font-family: 'Arial';
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container Style for Form */
+.container {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Input and Button Styling */
+input, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+/* Submit Button Styling */
+input[type="submit"], button {
+    background-color: #007bff; /* Blue background */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+/* Button Hover Effect */
+button:hover, input[type="submit"]:hover {
+    background-color: #0056b3; /* Darker blue when hovered */
+}
+
+
