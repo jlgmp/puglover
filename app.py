@@ -8,7 +8,7 @@ app = Flask(__name__)
 logging.basicConfig(filename='electricity.txt', level=logging.INFO,
                     format='%(asctime)s - %(message)s')
 
-
+acceptAPI=True
 # --------------------------------- Register ---------------------------------------------
 
 # Define Class User
@@ -46,9 +46,9 @@ def register():
             if user.userID==userID and device_id not in user.get_device_id():
                 user.add_device(device_id)
                 break
-    for i in user_database:
-        print(i)
-    return  jsonify({"status": "success", "message": f"device id:{device_id} registered successfully."}),201
+    '''for i in user_database:
+        print(i)'''
+    return  jsonify({"status": "success", "message": f"device id:{device_id} registered successfully."})
 
 
 # ----------------------------------- Meter Reading ---------------------------------------------
@@ -176,7 +176,9 @@ def userDataRecover(user_database):
             for i in data:
                 user.add_device(i)
             user_database.append(user)
-
+def eleDataRecover(meter_database):
+    with open('electricity.txt','r',encoding='utf-8') as f:
+        
 
 userDataRecover(user_database)
 
