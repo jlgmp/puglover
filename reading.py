@@ -1,4 +1,3 @@
-import json
 import os
 from flask import Flask, request, jsonify
 
@@ -15,7 +14,7 @@ class Meter:
     def add_reading(self, date, time_slot, meter):
         if date not in self.readings:
             self.readings[date] = {}
-        self.readings[date][time_slot] = int(meter)
+        self.readings[date][time_slot] = round(float(meter),1)
 
     def get_readings(self):
         return self.readings
@@ -58,8 +57,16 @@ def meter_reading_endpoint():
 
 
 def meterDataBackup(meter_database):
-    with open('meter_database.txt', 'w', encoding='utf-8') as f:
-        f.write("DeviceID, Date, Final_Daily_Readings, Daily_Consumption\n")  # 写入表头
+    file_name = 'meter_database.txt'
+
+    if not os.path.exists(file_name) or os.path.getsize(file_name) == 0:
+        mode = 'w'
+    else:
+        mode = 'a'
+
+    with open(file_name, mode, encoding='utf-8') as f:
+        if mode == 'w':
+            f.write("DeviceID, Date, Final_Daily_Readings, Daily_Consumption\n")  # 写入表头
         
         for meter in meter_database:
             readings = meter.readings  # 设备的所有读数
@@ -78,7 +85,7 @@ def meterDataBackup(meter_database):
                     continue
                 
                 final_reading = readings[next_date]["00:00"]  # 当天的最终读数是 **第二天的 00:00**
-                daily_consumption = final_reading - readings[current_date]["00:00"]  # 用电量
+                daily_consumption = round(final_reading - readings[current_date]["00:00"],1)  # 用电量
                 
                 f.write(f"{meter.device_id}, {current_date}, {final_reading}, {daily_consumption}\n")
     
