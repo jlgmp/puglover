@@ -8,4 +8,4 @@ response = requests.get(url)
 if response.status_code == 200:
     print(response.json())
 else:
-    print(f"查询失败: {response.status_code}, {response.text}")
+    print(f"Query failed: {response.status_code}, {response.text}")
