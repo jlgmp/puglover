@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import logging
-import os
+import pandas as pd
+import datetime
 
 
 app = Flask(__name__)
@@ -75,27 +76,25 @@ def meter_reading_endpoint():
     global meter_database
     req_data = request.json
 
-    for field in ["device", "date", "time", "meter"]:
+    for field in ["device","time", "meter"]:
         if field not in req_data:
             return jsonify({"message": f"Missing field: {field}"}), 400
 
     device = req_data["device"]
-    date = req_data["date"]
     time_slot = req_data["time"]
     meter = req_data["meter"]
 
-    # Check whether the device exists
     existing_meter = next((m for m in meter_database if m.device_id == device), None)
 
-    if existing_meter is None: # Add new device and data
+    if existing_meter is None:
         new_meter = Meter(device)
-        new_meter.add_reading(date, time_slot, meter)
+        new_meter.add_reading(time_slot, meter)
         meter_database.append(new_meter)
     else:
-        existing_meter.add_reading(date, time_slot, meter) # update data for existing device
+        existing_meter.add_reading(time_slot, meter)
 
-    for m in meter_database:
-        print(m)
+    #for m in meter_database:
+    #    print(m)
 
     return jsonify({m.device_id: m.get_readings() for m in meter_database}), 200
 
@@ -104,30 +103,30 @@ def meter_reading_endpoint():
 @app.route('/stopServer',methods=['GET'])
 def stop_server():
     global acceptAPI
-    global user_database
+    global user_database, meter_database
     acceptAPI=False
     userDataBackUp(user_database)
     user_database=[]
     if not user_database:
         userDataRecover(user_database)
-
+    meterDataBackup(meter_database)
     acceptAPI=True
     return "Server Shutting Down"
 
 # meter backup test
-@app.route('/backup', methods=['GET', 'POST'])
-def stopserver():
-    if not meter_database:
-        return jsonify({"message": "Nothing needs to backup！"}), 400  # deal with empty data
-    meterDataBackup(meter_database)
-    return jsonify({"message": "Backup Completed!"}), 200
+#@app.route('/backup', methods=['GET', 'POST'])
+#def stopserver():
+#    if not meter_database:
+#        return jsonify({"message": "Nothing needs to backup！"}), 400  # deal with empty data
+#    meterDataBackup(meter_database)
+#    return jsonify({"message": "Backup Completed!"}), 200
 
 
 # --------------------------------- Backup Define ---------------------------------------------
 
 # User Data Backup
 def userDataBackUp(user_database):
-    with open('userdatabase.txt', 'w', encoding='utf-8') as f:
+    with open('userDatabase.txt', 'w', encoding='utf-8') as f:
         for user in user_database:
             userstr=user.userID+','+",".join(user.get_device_id())
             f.write(userstr+'\n')
@@ -135,42 +134,33 @@ def userDataBackUp(user_database):
 
 # Meter Readings Backup
 def meterDataBackup(meter_database):
-    file_name = 'meterdatabase.txt'
+    file_name = 'meterDatabase.txt'
+    df = pd.read_csv(file_name, sep=',', encoding='utf-8')
+    df_sorted = df.sort_values('Date', ascending=True)
+    last_readings = df_sorted.groupby('DeviceID').tail(1).set_index('DeviceID')['Final_Daily_Readings'].to_dict()
 
-    if not os.path.exists(file_name) or os.path.getsize(file_name) == 0:
-        mode = 'w'
-    else:
-        mode = 'a'
+    new_data = []
+    today = datetime.date.today().strftime('%Y-%m-%d')
+    for meter in meter_database:
+        device_id = meter.device_id
+        readings = meter.readings 
+        final_reading_today = readings["24:00"]
 
-    with open(file_name, mode, encoding='utf-8') as f:
-        if mode == 'w':
-            f.write("DeviceID, Date, Final_Daily_Readings, Daily_Consumption\n")
+        previous_final = last_readings.get(device_id, None)
+        daily_consumption = final_reading_today - previous_final
         
-        for meter in meter_database:
-            readings = meter.readings
-            sorted_dates = sorted(readings.keys())
-            
-            if len(sorted_dates) < 2:
-                continue  # if the device data < 2, cannot calculate the consumption
+        new_data.append([device_id, today, f"{final_reading_today:.1f}", f"{daily_consumption:.1f}"])
 
-            for i in range(len(sorted_dates) - 1):
-                current_date = sorted_dates[i]
-                next_date = sorted_dates[i + 1]
-
-                # ensure current and next date both have '00:00' readings
-                if "00:00" not in readings[current_date] or "00:00" not in readings[next_date]:
-                    continue
-                
-                final_reading = readings[next_date]["00:00"]  # current final reading = next date 00:00 reading
-                daily_consumption = round(final_reading - readings[current_date]["00:00"],1)
-                
-                f.write(f"{meter.device_id}, {current_date}, {final_reading}, {daily_consumption}\n")
+    with open(file_name, 'a', encoding='utf-8') as f:
+        for entry in new_data:
+            f.write(",".join(entry) + "\n")
+    
     print("Backup completed!")
 
 
 # --------------------------------- Recover Define ---------------------------------------------
 def userDataRecover(user_database):
-    with open('userdatabase.txt', 'r', encoding='utf-8') as f: 
+    with open('userDatabase.txt', 'r', encoding='utf-8') as f: 
         for line in f:
             line=line.strip()
             data=line.split(',')
