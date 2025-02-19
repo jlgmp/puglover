@@ -7,22 +7,17 @@ def meter_reading():
             break
         
         while True:
-            time_slot = input("Please enter Time (format: hh:mm, 'b' to DeviceID, 'x' to stop): ")
-            if time_slot.lower() == 'x':
+            time = input("Please enter Time (format: hh:mm, 'b' to DeviceID, 'x' to stop): ")
+            if time.lower() == 'x':
                 return
-            if time_slot.lower() == 'b':
+            if time.lower() == 'b':
                 break
 
             meter = input("Please enter meter reading: ")
             if meter.lower() == 'x':
                 return
 
-            data = {
-                'device': device, 
-                'time': time_slot,
-                'meter': meter
-            }
-
+            data = {'device': device, 'time': time,'meter': meter}
             response = requests.post('http://127.0.0.1:5000/meterin', json=data)
             result = response.json()
 

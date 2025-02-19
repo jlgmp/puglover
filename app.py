@@ -56,59 +56,41 @@ def register():
 
 # Define Class Meter
 global meter_database
-meter_database = []
+meter_database = {}
 
 class Meter:
     def __init__(self, device_id):
         self.device_id = device_id
         self.readings = {}
-    def add_reading(self, time_slot, meter):
-        self.readings[time_slot] = round(float(meter),1)
+    def add_reading(self, time, meter):
+        self.readings[time] = round(float(meter),1)
     def get_readings(self):
         return self.readings
     def __str__(self):
         return f"Device: {self.device_id}, Readings: {self.readings}"
 
-# Define meterreading function
 @app.route('/meterin', methods=['POST'])
-def meter_reading_endpoint():
+def meter_in():
     global meter_database
-    req_data = request.json
+    data = request.json
 
-    for field in ["device","time", "meter"]:
-        if field not in req_data:
-            return jsonify({"message": f"Missing field: {field}"}), 400
+    device = data["device"]
+    time = data["time"]
+    meter = data["meter"]
 
-    device = req_data["device"]
-    time_slot = req_data["time"]
-    meter = req_data["meter"]
+    if device not in meter_database:
+        meter_database[device] = Meter(device)
 
-    existing_meter = next((m for m in meter_database if m.device_id == device), None)
-
-    if existing_meter is None:
-        new_meter = Meter(device)
-        new_meter.add_reading(time_slot, meter)
-        meter_database.append(new_meter)
-    else:
-        existing_meter.add_reading(time_slot, meter)
-
-    return jsonify({m.device_id: m.get_readings() for m in meter_database}), 200
+    meter_database[device].add_reading(time, meter)
+    return jsonify({device: meter_database[device].get_readings()}), 200
 
 # In-memory data
 @app.route('/meterdata', methods=['GET'])
-def get_meter_data():
+def meter_data():
     global meter_database
-    device_id = request.args.get("device")  # 从请求参数获取 device_id
+    device_id = request.args.get("device")
 
-    if not device_id:
-        return jsonify({"message": "请提供 device 参数"}), 400
-
-    existing_meter = next((m for m in meter_database if m.device_id == device_id), None)
-
-    if existing_meter is None:
-        return jsonify({"message": f"设备 {device_id} 未找到"}), 404
-
-    return jsonify({device_id: existing_meter.get_readings()}), 200
+    return jsonify({device_id: meter_database[device_id].get_readings()}), 200
 
 
 # --------------------------------- Backup Define ---------------------------------------------
@@ -123,24 +105,23 @@ def userDataBackUp(user_database):
 
 # Meter Readings Backup
 def meterDataBackup(meter_database):
-    file_name = 'meter_database.txt'
-    df = pd.read_csv(file_name, sep=',', encoding='utf-8')
+    df = pd.read_csv('meterDatabase.txt', sep=',', encoding='utf-8')
     df_sorted = df.sort_values('Date', ascending=True)
     last_readings = df_sorted.groupby('DeviceID').tail(1).set_index('DeviceID')['Final_Daily_Readings'].to_dict()
 
     new_data = []
     today = datetime.date.today().strftime('%Y-%m-%d')
-    for meter in meter_database:
-        device_id = meter.device_id
-        readings = meter.readings
-        final_reading_today = readings["24:00"]
 
-        previous_final = last_readings.get(device_id, None)
+    for device_id, meter in meter_database.items():
+        readings = meter.readings
+        # final_reading_today = readings["24:00"]
+        final_reading_today = readings[max(readings.keys())]
+        previous_final = last_readings.get(device_id, 0)
         daily_consumption = final_reading_today - previous_final
-        
+
         new_data.append([device_id, today, f"{final_reading_today:.1f}", f"{daily_consumption:.1f}"])
 
-    with open(file_name, 'a', encoding='utf-8') as f:
+    with open('meterDatabase.txt', 'a', encoding='utf-8') as f:
         for entry in new_data:
             f.write(",".join(entry) + "\n")
     
@@ -148,26 +129,13 @@ def meterDataBackup(meter_database):
 
 
 # ----------------------------------- Stop Server ---------------------------------------------
-@app.route('/stopServer',methods=['GET'])
+@app.route('/stopServer',methods=['GET', 'POST'])
 def stop_server():
-    global acceptAPI
-    global user_database, meter_database
+    global acceptAPI, meter_database
     acceptAPI=False
-    userDataBackUp(user_database)
-    user_database=[]
-    if not user_database:
-        userDataRecover(user_database)
     meterDataBackup(meter_database)
-    acceptAPI=True
+    acceptAPI = True
     return "Server Shutting Down"
-
-# meter backup test
-#@app.route('/backup', methods=['GET', 'POST'])
-#def stopserver():
-#    if not meter_database:
-#        return jsonify({"message": "Nothing needs to backup！"}), 400  # deal with empty data
-#    meterDataBackup(meter_database)
-#    return jsonify({"message": "Backup Completed!"}), 200
 
 
 # --------------------------------- Recover Define ---------------------------------------------
